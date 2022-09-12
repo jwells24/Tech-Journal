@@ -1,0 +1,16 @@
+# HOST DISCOVERY ONE-LINERS Jack Wells - 9/12/2022 Bash
+
+# Using ping & a for statement, ping the IPs in the range and loop through them with the for loop and report the IPs that are up
+```bash
+for ip in $(seq 2 50); do ping -c 1 -W .25 10.0.5.$ip >> temp.txt;done; awk ‘/from/ {print $4}’ temp.txt > sweep.txt;
+```
+
+# Using fping, scan the ports in the range and report the IPs that are up
+```bash
+sudo fping -c 1 -t 1000 -g 10.0.5.1 10.0.5.50 >> temp.txt; awk ‘/64 bytes/ {print $1}’ temp.txt >> sweep.txt;
+```
+
+# Using nmap, scan the ports in the range listed and report the IPs that are up 
+```bash
+nmap -sn -n 10.0.5.01-50 >> temp2.txt; awk 'host down' temp2.txt; awk '/scan report/ {print $5}' temp2.txt >> final2.txt
+```
