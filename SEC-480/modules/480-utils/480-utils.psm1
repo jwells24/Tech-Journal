@@ -49,12 +49,28 @@ Function Select-VM([string] $folder)
         $pick_index = Read-Host "Which index numer [x] do you wish to pick?"
         # Deal with an invalid index
         $selected_vm = $vms[$pick_index -1]
-        Write-Host "You picked" $selected_vm.name
+        Write-Host -ForegroundColor "Green" "You picked" $selected_vm.name
         return $selected_vm 
     }
     catch 
     {
         Write-Host "Invalid Folder: $folder" -ForegroundColor Red    
+    }
+}
+
+#Obtain the snapshot to create the clone with
+Function Select-Snapshot([string] $snap_name, [VMware.VimAutomation.ViCore.Impl.V1.Inventory.VirtualMachineImpl] $selected_vm)
+{
+    $snapshot=$null
+    try
+    {
+        $snapshot = Get-Snapshot -VM $selected_vm -Name $snap_name
+        Write-Host -ForegroundColor "Green" "Snapshot has been successfully selected." 
+        return $snapshot
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Invalid Snapshot or VM Selected"
     }
 }
 
