@@ -84,6 +84,7 @@ Function Select-Snapshot([string] $snap_name, [VMware.VimAutomation.ViCore.Impl.
     catch 
     {
         Write-Host -ForegroundColor "Red" "Invalid Snapshot or VM Selected"
+        Exit
     }
 }
 
@@ -100,6 +101,7 @@ Function Select-VMWareHost([string] $hostName)
     catch 
     {
         Write-Host -ForegroundColor "Red" "Failed to identify VMHost."
+        Exit
     }
 }
 
@@ -116,6 +118,7 @@ Function Select-Datastore([string] $dstoreName)
     catch 
     {
         Write-Host -ForegroundColor "Red" "Failed to select Datastore."
+        Exit
     }
 }
 
@@ -135,6 +138,7 @@ Function New-LinkedClone([string] $chosenName, [VMware.VimAutomation.ViCore.Impl
     catch 
     {
         Write-Host -ForegroundColor "Red" "Failed to create linked clone."
+        Exit
     }
 
 }
