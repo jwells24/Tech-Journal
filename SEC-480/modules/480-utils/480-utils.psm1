@@ -177,3 +177,97 @@ Function New-Network([VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost] $us
         Write-Host -ForegroundColor "Red" "Failed to create switch/port group."
     }    
 }
+
+#Start a VM
+Function Start-ProperVM([string] $chosenVM, [string] $folder)
+{
+    $selected_vm=$null
+    try 
+    {
+        $vms = Get-VM -Location $folder
+        $index = 1
+        $agg = 0
+        $spec = 0
+        foreach($vm in $vms)
+        {
+            Write-Host [$index] $vm.name 
+            $index+=1
+            $agg+=1
+        }   
+        while($spec -ne 1)
+        {
+            $pick_index = Read-Host "Which index number [x] do you wish to pick?"
+            if($pick_index -gt $agg)
+            {
+                Write-Host -ForegroundColor "Yellow" "Chosen index was not in the correct range. Select a valid index."
+            }
+            else 
+            {
+                $selected_vm = $vms[$pick_index -1]
+                $spec+=1
+            }
+        }
+    }
+    catch 
+    {
+        Write-Host "Invalid Folder: $folder" -ForegroundColor Red    
+    }
+    try 
+    {
+        Start-VM -VM $selected_vm
+        Write-Host -ForegroundColor "Green" "Successfully started your VM."
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Failed to Start your VM."
+    }
+}
+
+#Set the network adapter of a VM
+Function Set-NetworkAdapterVM([string] $folder)
+{
+    $selected_vm=$null
+    try 
+    {
+        $vms = Get-VM -Location $folder
+        $index = 1
+        $agg = 0
+        $spec = 0
+        foreach($vm in $vms)
+        {
+            Write-Host [$index] $vm.name 
+            $index+=1
+            $agg+=1
+        }   
+        while($spec -ne 1)
+        {
+            $pick_index = Read-Host "Which index number [x] do you wish to pick?"
+            if($pick_index -gt $agg)
+            {
+                Write-Host -ForegroundColor "Yellow" "Chosen index was not in the correct range. Select a valid index."
+            }
+            else 
+            {
+                $selected_vm = $vms[$pick_index -1]
+                $spec+=1
+            }
+        }
+    }
+    catch 
+    {
+        Write-Host "Invalid Folder: $folder" -ForegroundColor Red    
+    }
+    $adapterNum = Read-Host "Which adapter would you like to change:1, 2, or 3?"
+    $networkname = Read-Host "What network would you like to change your adapter too?"
+    $adapterName="blank"
+    try 
+    {
+        $adapterName="Network Adapter " + $adapterNum
+        Get-VM $selected_vm | Get-NetworkAdapter -Name $adapterName | Set-NetworkAdapter -NetworkName $networkname
+        Write-Host -ForegroundColor "Green" "Successfully changed your adapter"
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Failed to change your adapter"
+    }
+}
