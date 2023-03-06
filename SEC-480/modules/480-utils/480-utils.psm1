@@ -142,3 +142,38 @@ Function New-LinkedClone([string] $chosenName, [VMware.VimAutomation.ViCore.Impl
     }
 
 }
+
+#Grab the IP of a new box
+Function Get-IP([VMware.VimAutomation.ViCore.Impl.V1.Inventory.VirtualMachineImpl] $chosenVM)
+{
+    $networkOutput=$null
+    try 
+    {
+        $networkOutput = (Get-VM -Name $chosenVM | Select-Object -ExpandProperty Guest)
+        Write-Host -ForegroundColor "Green" "Network information was successfully grabbed."
+        return $networkOutput
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Network information was not found."
+    }
+}
+
+#Create a new virtual network and portgroup
+Function New-Network([VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost] $userHost)
+{
+    $switchName = Read-Host "What would you like to name your switch?"
+    $groupName = Read-Host "What would you like to name your new port group?"
+    $newSwitch=$null
+    try
+    {
+        $newSwitch = New-VirtualSwitch -Name $switchName -VMHost $userHost
+        Write-Host -ForegroundColor "Green" "Switch successfully created."
+        New-VirtualPortGroup -VirtualSwitch $newSwitch -Name $groupName
+        Write-Host -ForegroundColor "Green" "Port group successfully created."
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Failed to create switch/port group."
+    }    
+}

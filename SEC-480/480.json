@@ -1,6 +1,6 @@
 {
     "vcenter_server" : "10.0.17.3",
-    "vm_folder" : "Base-Vms",
+    "vm_folder" : "Production",
     "esxi_host" : "192.168.7.17",
     "default_network" : "480-WAN",
     "usableSnap" : "Base"
