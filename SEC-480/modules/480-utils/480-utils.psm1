@@ -41,16 +41,29 @@ Function Select-VM([string] $folder)
     {
         $vms = Get-VM -Location $folder
         $index = 1
+        $agg = 0
+        $spec = 0
         foreach($vm in $vms)
         {
             Write-Host [$index] $vm.name 
             $index+=1
+            $agg+=1
         }   
-        $pick_index = Read-Host "Which index numer [x] do you wish to pick?"
-        # Deal with an invalid index
-        $selected_vm = $vms[$pick_index -1]
-        Write-Host -ForegroundColor "Green" "You picked" $selected_vm.name
-        return $selected_vm 
+        while($spec -ne 1)
+        {
+            $pick_index = Read-Host "Which index numer [x] do you wish to pick?"
+            if($pick_index -gt $agg)
+            {
+                Write-Host -ForegroundColor "Yellow" "Chosen index was not in the correct range. Select a valid index."
+            }
+            else 
+            {
+                $selected_vm = $vms[$pick_index -1]
+                Write-Host -ForegroundColor "Green" "You picked" $selected_vm.name
+                return $selected_vm 
+                $spec+=1
+            }
+        }
     }
     catch 
     {
@@ -74,4 +87,54 @@ Function Select-Snapshot([string] $snap_name, [VMware.VimAutomation.ViCore.Impl.
     }
 }
 
-#
+#Obtain the VMWare Host to use
+Function Select-VMWareHost([string] $hostName)
+{
+    $VMHost=$null
+    try 
+    {
+        $VMHost = Get-VMHost -Name $hostName
+        Write-Host -ForegroundColor "Green" "VM Host has been successfully identified."
+        return $VMHost
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Failed to identify VMHost."
+    }
+}
+
+#Identify the datastore you would like to use
+Function Select-Datastore([string] $dstoreName)
+{
+    $datastore=$null
+    try 
+    {
+        $datastore = Get-DataStore -Name $dstoreName
+        Write-Host -ForegroundColor "Green" "Successfully selected datastore."
+        return $datastore
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Failed to select Datastore."
+    }
+}
+
+#Create the linked vm
+Function New-LinkedClone([string] $chosenName, [VMware.VimAutomation.ViCore.Impl.V1.Inventory.VirtualMachineImpl] $chosenVm, 
+                            [VMware.VimAutomation.ViCore.Types.V1.VM.Snapshot] $chosenSnap,
+                            [VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost] $chosenHost, 
+                            [VMware.VimAutomation.ViCore.Types.V1.DatastoreManagement.Datastore] $chosenStore)
+{
+    $linkedVM=$null
+    try 
+    {
+        $linkedVM = New-VM -LinkedClone -Name $chosenName -VM $chosenVm -ReferenceSnapshot $chosenSnap -VMHost $chosenHost -Datastore $chosenStore
+        Write-Host -ForegroundColor "Green" "Successfully created your linked clone: $chosenName"
+        return $linkedVM
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Failed to create linked clone."
+    }
+
+}
