@@ -149,7 +149,7 @@ Function Get-IP([VMware.VimAutomation.ViCore.Impl.V1.Inventory.VirtualMachineImp
     $networkOutput=$null
     try 
     {
-        $networkOutput = (Get-VM -Name $chosenVM | Select-Object -ExpandProperty Guest)
+        ($networkOutput = Get-VM -Name $chosenVM).Guest.IPAddress
         Write-Host -ForegroundColor "Green" "Network information was successfully grabbed."
         return $networkOutput
     }

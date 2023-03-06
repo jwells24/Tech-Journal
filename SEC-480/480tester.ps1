@@ -9,13 +9,13 @@ $conf = Get-480Config -config_path "/home/jwells/Documents/Tech-Journal/SEC-480/
 480Connect -server $conf.vcenter_server
 
 #Select your folder
-#$folder = Read-Host "What is the folder you would like to select from?"
+$folder = Read-Host "What is the folder you would like to select from?"
 
 #Select the vm you want to create a linked clone of with Select-Vm
 #Write-Host "Selecting your VM"
-#$vm = Select-Vm -folder $folder
+$vm = Select-Vm -folder $folder
 
-#Get-IP -chosenVM $vm
+Get-IP -chosenVM $vm
 
 #$vmhost = Select-VMWareHost -hostname $conf.esxi_host
 #New-Network -userHost $vmhost
@@ -26,6 +26,7 @@ $conf = Get-480Config -config_path "/home/jwells/Documents/Tech-Journal/SEC-480/
 #Start-ProperVM -chosenVM $vm -folder $folder
 
 #Select your folder
-$folder = Read-Host "What is the folder you would like to select from?"
+#$folder = Read-Host "What is the folder you would like to select from?"
 
-Set-NetworkAdapterVM -folder $folder
+#Set-NetworkAdapterVM -folder $folder
+#Start-ProperVM -chosenVM $vm -folder $folder
