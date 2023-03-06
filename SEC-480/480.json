@@ -1,0 +1,8 @@
+{
+    "vcenter_server" : "10.0.17.3",
+    "vm_folder" : "Base-Vms",
+    "esxi_host" : "192.168.7.17",
+    "default_network" : "480-WAN",
+    "default_datastore" : "datastore1-super7"
+}
+
