@@ -151,7 +151,6 @@ Function Get-IP([VMware.VimAutomation.ViCore.Impl.V1.Inventory.VirtualMachineImp
     {
         ($networkOutput = Get-VM -Name $chosenVM).Guest.IPAddress
         Write-Host -ForegroundColor "Green" "Network information was successfully grabbed."
-        return $networkOutput
     }
     catch 
     {
@@ -179,7 +178,7 @@ Function New-Network([VMware.VimAutomation.ViCore.Types.V1.Inventory.VMHost] $us
 }
 
 #Start a VM
-Function Start-ProperVM([string] $chosenVM, [string] $folder)
+Function Start-ProperVM([string] $folder)
 {
     $selected_vm=$null
     try 
@@ -224,16 +223,17 @@ Function Start-ProperVM([string] $chosenVM, [string] $folder)
 }
 
 #Set the network adapter of a VM
-Function Set-NetworkAdapterVM([string] $folder)
+Function Set-NetworkAdapterVM([string] $name)
 {
     $selected_vm=$null
     try 
     {
-        $vms = Get-VM -Location $folder
+        $vms = Get-VM -name $name
         $index = 1
         $agg = 0
         $spec = 0
-        foreach($vm in $vms)
+        $selected_vm = Get-VM -name $name
+        <#foreach($vm in $vms)
         {
             Write-Host [$index] $vm.name 
             $index+=1
@@ -248,10 +248,10 @@ Function Set-NetworkAdapterVM([string] $folder)
             }
             else 
             {
-                $selected_vm = $vms[$pick_index -1]
+            $selected_vm = $vms[$pick_index -1]
                 $spec+=1
             }
-        }
+        }#>
     }
     catch 
     {
@@ -259,10 +259,10 @@ Function Set-NetworkAdapterVM([string] $folder)
     }
     $adapterNum = Read-Host "Which adapter would you like to change:1, 2, or 3?"
     $networkname = Read-Host "What network would you like to change your adapter too?"
-    $adapterName="blank"
+    $adapterName = "blank"
     try 
     {
-        $adapterName="Network Adapter " + $adapterNum
+        $adapterName = "Network Adapter " + $adapterNum
         Get-VM $selected_vm | Get-NetworkAdapter -Name $adapterName | Set-NetworkAdapter -NetworkName $networkname
         Write-Host -ForegroundColor "Green" "Successfully changed your adapter"
     }
