@@ -1,0 +1,13 @@
+network:
+  renderer: networkd
+  ethernets:
+    {{  device  }}:
+      dhcp4: false
+      addresses: [{{  lan_ip  }}/24]
+      nameservers:
+        search: [{{  domain  }}]
+        addresses: [{{  name_server  }}]
+      routes:
+        - to: default
+          via: 10.0.5.2
+  version: 2
