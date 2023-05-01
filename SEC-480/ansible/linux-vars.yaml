@@ -1,0 +1,24 @@
+linux:
+  hosts:
+  children:
+    rocky:
+      hosts:
+        10.0.5.76:
+          hostname: rocky-1
+          lan_ip: 10.0.5.10
+        10.0.5.77:
+          hostname: rocky-2
+          lan_ip: 10.0.5.11
+        10.0.5.78:
+          hostname: rocky-3
+          lan_ip: 10.0.5.12
+      vars:
+        device: ens192
+  
+  vars:
+    public_key: "ssh-rsa MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAusmj9nrr0S6we9vd0aDa3pViATeg0/HjoasUheRGSthy+LwHnYNG28FIX9X74OQvIbeCtbJgz4bpUMUAR+N7lzKCidg+f1t5nrRur13YjB79NPCpXqmw8KNzwwdWiLlSieShHH50qlSgE9zE8DhgFx+FxxWA2SevXcvzAFgr6ggK0jnx78NNw3QGWNOEqHPrx0z5eRvp+UvIjeIQ/4NoDOX371UT4NYIn+9XxNZFBqdZh5ETkD0PQNOVD9vGKnLi3MWTcDDPxgJXkdYCJchOGWvkBK1/w3ul5bSaTrR2aXvRFSsFaeKr/ERkwaI3ld7qbqoomOWLVfRCsX+dDVfn7wIDAQAB"
+    ansible_user: deployer
+    prefix: 24
+    gateway: 10.0.5.2
+    name_server: 10.0.5.5
+    domain: blue1.local
