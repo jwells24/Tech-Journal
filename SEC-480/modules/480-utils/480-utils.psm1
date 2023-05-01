@@ -271,3 +271,27 @@ Function Set-NetworkAdapterVM([string] $name)
         Write-Host -ForegroundColor "Red" "Failed to change your adapter"
     }
 }
+
+#Use invoke-script to change the Ip and network information of a windows box with netsh
+Function Set-NetworkInfo([String] $chosenVM)
+{
+    $workingVM=$null
+    try 
+    {
+        $workingVM = Get-VM -Name $chosenVM
+        $newIP = Read-Host "What would you like to set the IP of your chosen machine to?"
+        $netmask = Read-Host "What is the netmask of the chosen machine?"
+        $gateway = Read-Host "What would you like to set the gateway of your chosen machine to?"
+        $nameserv = Read-Host "What is the nameserver of your chosen machine?"
+        
+        Invoke-VMScript -vm $chosenVM -ScriptText "hostname" -GuestUser Administrator -GuestPassword Pugmug446!
+        Invoke-VMScript -vm $chosenVM -ScriptText "netsh interface ipv4 set address name='ethernet0' static $newIP $netmask $gateway" -GuestUser Administrator -GuestPassword Pugmug446!
+        Invoke-VMScript -vm $chosenVM -ScriptText "netsh interface ipv4 set dns 'ethernet0' static $nameserv primary" -GuestUser Administrator -GuestPassword Pugmug446!
+        
+        Write-Host -ForegroundColor "Green" "Successfully changed network information."
+    }
+    catch 
+    {
+        Write-Host -ForegroundColor "Red" "Network information was not changed."
+    }
+}
