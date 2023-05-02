@@ -1,0 +1,68 @@
+# this playlist installs adds services on a windows server
+- name: windows adds installation
+  hosts: windows
+  vars_prompt:
+  - name: domain_admin
+    prompt: What would you like to name the domain admin?
+    private: false
+  - name: password
+    prompt: What would you like to set the password too?
+    private: false
+
+  vars:
+    ansible_shell_type: powershell
+
+  tasks:
+    - name: set the hostname
+      ansible.windows.win_powershell: 
+        script:  |
+          Rename-Computer -NewName "dc-blue1"
+
+    - name: Create a new forest and install domain services
+      win_feature:
+        name: AD-Domain-Services
+        include_management_tools: yes
+        includes_sub_features: yes
+        state: present
+      register: result
+
+    - name: Create a new forest
+      win_domain:
+        dns_domain_name: "blue1.local"
+        safe_mode_password: "{{  password  }}"
+      register: result
+
+    - name: Reboot after creation
+      win_reboot:
+        msg: "Server config in progress; rebooting..."
+      when: result.reboot_required
+
+    - name: create a domain admin
+      ansible.windows.win_powershell: 
+        script:  |
+          New-ADUser -Name "{{  domain_admin  }}" -Accountpassword "{{  password  }}" -Path "OU=Domain Admins,OU=Users,DC=blue1,DC=local"
+
+    - name: create an OU for accounts
+      ansible.windows.win_powershell: 
+        script:  |
+          New-ADOrganizationalUnit -Name "Accounts" -Path "DC=blue1,DC=local"
+    
+    - name: create an OU for groups in accounts
+      ansible.windows.win_powershell: 
+        script:  |
+          New-ADOrganizationalUnit -Name "Groups" -Path "OU=Accounts,DC=blue1,DC=local"
+
+    - name: create an OU for computers
+      ansible.windows.win_powershell: 
+        script:  |
+          New-ADOrganizationalUnit -Name "Computers" -Path "DC=blue1,DC=local"
+
+    - name: create an OU for servers in computers
+      ansible.windows.win_powershell: 
+        script:  |
+          New-ADOrganizationalUnit -Name "Servers" -Path "OU=Computers,DC=blue1,DC=local"
+
+    - name: create an OU for workstations in computers
+      ansible.windows.win_powershell: 
+        script:  |
+          New-ADOrganizationalUnit -Name "Workstations" -Path "OU=Computers,DC=blue1,DC=local"
