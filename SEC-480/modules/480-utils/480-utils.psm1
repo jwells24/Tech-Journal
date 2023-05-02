@@ -285,8 +285,8 @@ Function Set-NetworkInfo([String] $chosenVM)
         $nameserv = Read-Host "What is the nameserver of your chosen machine?"
         
         Invoke-VMScript -vm $chosenVM -ScriptText "hostname" -GuestUser Administrator -GuestPassword Pugmug446!
-        Invoke-VMScript -vm $chosenVM -ScriptText "netsh interface ipv4 set address name='ethernet0' static $newIP $netmask $gateway" -GuestUser Administrator -GuestPassword Pugmug446!
-        Invoke-VMScript -vm $chosenVM -ScriptText "netsh interface ipv4 set dns 'ethernet0' static $nameserv primary" -GuestUser Administrator -GuestPassword Pugmug446!
+        Invoke-VMScript -vm $chosenVM -ScriptText "netsh interface ipv4 set address name='ethernet0' static $newIP $netmask $gateway" -GuestUser Administrator -GuestPassword InsertPassHere
+        Invoke-VMScript -vm $chosenVM -ScriptText "netsh interface ipv4 set dns 'ethernet0' static $nameserv primary" -GuestUser Administrator -GuestPassword InsertPassHere
         
         Write-Host -ForegroundColor "Green" "Successfully changed network information."
     }
