@@ -3,6 +3,6 @@ windows:
     10.0.5.5:
       hostname: 
       ansible_user: Administrator
-      ansible_password: Pugmug446!
+      ansible_password: InsertPassHere
       ansible_connection: winrm
       ansible_winrm_server_cert_validation: ignore
