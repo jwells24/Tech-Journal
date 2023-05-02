@@ -42,27 +42,32 @@
         script:  |
           New-ADUser -Name "{{  domain_admin  }}" -Accountpassword "{{  password  }}" -Path "OU=Domain Admins,OU=Users,DC=blue1,DC=local"
 
+    - name: create an OU for blue1
+      ansible.windows.win_powershell:
+        script:  |
+          New-ADOrganizationalUnit -Name "blue1" -Path "DC=blue1,DC=local"
+
     - name: create an OU for accounts
       ansible.windows.win_powershell: 
         script:  |
-          New-ADOrganizationalUnit -Name "Accounts" -Path "DC=blue1,DC=local"
+          New-ADOrganizationalUnit -Name "Accounts" -Path "OU=blue1,DC=blue1,DC=local"
     
     - name: create an OU for groups in accounts
       ansible.windows.win_powershell: 
         script:  |
-          New-ADOrganizationalUnit -Name "Groups" -Path "OU=Accounts,DC=blue1,DC=local"
+          New-ADOrganizationalUnit -Name "Groups" -Path "OU=AccountsOU=blue1,DC=blue1,DC=local"
 
     - name: create an OU for computers
       ansible.windows.win_powershell: 
         script:  |
-          New-ADOrganizationalUnit -Name "Computers" -Path "DC=blue1,DC=local"
+          New-ADOrganizationalUnit -Name "Computers" -Path "OU=blue1,DC=blue1,DC=local"
 
     - name: create an OU for servers in computers
       ansible.windows.win_powershell: 
         script:  |
-          New-ADOrganizationalUnit -Name "Servers" -Path "OU=Computers,DC=blue1,DC=local"
+          New-ADOrganizationalUnit -Name "Servers" -Path "OU=Computers,OU=blue1,DC=blue1,DC=local"
 
     - name: create an OU for workstations in computers
       ansible.windows.win_powershell: 
         script:  |
-          New-ADOrganizationalUnit -Name "Workstations" -Path "OU=Computers,DC=blue1,DC=local"
+          New-ADOrganizationalUnit -Name "Workstations" -Path "OU=Computers,OU=blue1,DC=blue1,DC=local"

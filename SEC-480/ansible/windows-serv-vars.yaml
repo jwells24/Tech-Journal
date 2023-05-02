@@ -1,8 +1,8 @@
 windows:
   hosts:
-    10.0.5.6:
-      hostname: m9-demo
+    10.0.5.5:
+      hostname: 
       ansible_user: Administrator
-      ansible_password: Ch@mpl@1n!22
+      ansible_password: Pugmug446!
       ansible_connection: winrm
       ansible_winrm_server_cert_validation: ignore
